@@ -17,6 +17,10 @@
 
     $drivers = $db->selectAll('driver');
 
+    if (isset($_GET['id'])) {
+        $driver = $db->selectById('driver', $_GET['id']);
+    }
+
     ?>
     <div class="container justify-content-center text-center">
         <header class="my-3">
@@ -25,34 +29,34 @@
         <main>
 
         <hr>
-            <div class="p-5">
-                <form action="newdriver.php" method="post">
+            <div class="p-5 col-12 col-md-10 col-lg-6 mx-auto">
+                <form action="<?php echo isset($driver) ? 'updatedriver.php?id=' . $driver['id'] : 'newdriver.php'; ?>" method="post">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="firstName" placeholder="firstName" name="firstName">
+                        <input type="text" class="form-control" id="firstName" placeholder="firstName" name="firstName" value="<?php echo isset($driver) ? $driver['firstName'] : ''; ?>">
                         <label for="firstName">Keresztnév</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="lastName" placeholder="lastName" name="lastName">
+                        <input type="text" class="form-control" id="lastName" placeholder="lastName" name="lastName" value="<?php echo isset($driver) ? $driver['lastName'] : ''; ?>">
                         <label for="lastName">Vezetéknév</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="nationality" placeholder="Nemzetiség" name="nationality">
+                        <input type="text" class="form-control" id="nationality" placeholder="Nemzetiség" name="nationality" value="<?php echo isset($driver) ? $driver['nationality'] : ''; ?>">
                         <label for="nationality">Nemzetiség</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="number" placeholder="Versenyszám" name="number">
+                        <input type="text" class="form-control" id="number" placeholder="Versenyszám" name="number" value="<?php echo isset($driver) ? $driver['number'] : ''; ?>">
                         <label for="number">Versenyszám</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="teamId" placeholder="Csapatnév" name="teamId">
+                        <input type="text" class="form-control" id="teamId" placeholder="Csapatnév" name="teamId" value="<?php echo isset($driver) ? $driver['teamId'] : ''; ?>">
                         <label for="teamId">Csapatnév</label>
                     </div>
                     <div class="mb-3">
-                        <input type="checkbox" id="rookie" name="rookie" class="">
+                        <input type="checkbox" id="rookie" name="rookie" class="" <?php echo isset($driver) && $driver['rookie'] ? 'checked' : ''; ?>>
                         <label for="rookie">Újonc</label>
                     </div>
 
-                    <input type="submit" value="Mentés" class="btn btn-outline-secondary" name="saveBtn">
+                    <input type="submit" value="<?php echo isset($driver) ? 'Módosítás' : 'Hozzáadás'; ?>" class="btn btn-outline-secondary" name="<?php echo isset($driver) ? 'updateBtn' : 'saveBtn'; ?>">
                 </form>
             </div>
 
@@ -67,6 +71,7 @@
                         <th>Nemzetiség</th>
                         <th>Versenyszám</th>
                         <th>Csapatnév</th>
+                        <th>Műveletek</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,6 +83,10 @@
                             <td><?php echo $driver['nationality']; ?></td>
                             <td><?php echo $driver['number']; ?></td>
                             <td><?php echo $driver['teamId']; ?></td>
+                            <td class="text-end">
+                                <a href="index.php?id=<?php echo $driver['id']; ?>" class="btn btn-sm btn-outline-primary">Szerkesztés</a>
+                                <a href="deletedriver.php?id=<?php echo $driver['id']; ?>" class="btn btn-sm btn-outline-danger">Törlés</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
 
@@ -85,7 +94,7 @@
                 <tfoot>
                 </tfoot>
                 <tr>
-                    <td colspan="5">Összesen: <strong><?php echo count($drivers); ?></strong> versenyző</td>
+                    <td colspan="6">Összesen: <strong><?php echo count($drivers); ?></strong> versenyző</td>
                 </tr>
 
 

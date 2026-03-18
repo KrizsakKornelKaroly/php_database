@@ -1,9 +1,9 @@
 <?php
-if (isset($_POST['saveBtn'])) {
+if (isset($_POST['updateBtn'])) {
 
     require('database.php');
     $db = new db();
-    
+
     $data = [
         'firstName' => $_POST['firstName'],
         'lastName' => $_POST['lastName'],
@@ -12,15 +12,7 @@ if (isset($_POST['saveBtn'])) {
         'teamId' => $_POST['teamId'],
         'rookie' => isset($_POST['rookie']) ? 1 : 0
     ];
-
-    if ($db->insert('driver', $data)) {
-        header('Location: index.php');
-    } else {
-        die('Hiba történt az adatok mentése során!');
-    }
-
-} else {
+    $db->update('driver', $_GET['id'], $data);
     header('Location: index.php');
+    exit;
 }
-
-?>

@@ -42,7 +42,21 @@
             return $this->db->query("INSERT INTO $table ($keys) VALUES ($values)");
         }
 
+        public function delete($table, $id){
+            $stmt = $this->db->prepare("DELETE FROM $table WHERE id = ?");
+            $stmt->bind_param("i", $id);
+            return $stmt->execute();
+        }
 
+        public function update($table, $id, $data){
+            $set = [];
+            foreach ($data as $key => $value) {
+                $set[] = "$key = '$value'";
+            }
+            $setString = implode(", ", $set);
+            
+            return $this->db->query("UPDATE $table SET $setString WHERE id = $id");
+        }
 
     }
 ?>
